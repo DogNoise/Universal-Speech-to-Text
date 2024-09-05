@@ -1,0 +1,263 @@
+#--------------------------------- Live Voice Recognition screen
+<LiveVoiceRecognition>:
+    orientation:"vertical"
+    BoxLayout:
+        size_hint:1,0.15
+        Label:
+            text:root.l_live_main_title
+            font_size:'30sp'
+
+    BoxLayout:
+        size_hint:1,0.15
+        orientation:"vertical"
+        padding: 10,10,10,10
+        spacing: 10
+
+        canvas.before:
+            Color:
+                rgba: [root.live_volume_left/50,1,0,0.2+root.live_volume_left/200] if root.live_volume_right<=50 else [1,int(100-root.live_volume_right)/50,0,0.2+root.live_volume_right/200]
+            Rectangle:
+                pos: [self.pos[0]+self.size[0]/2,self.pos[1]]
+                size: [self.size[0]/2*root.live_volume_right/100,self.size[1]]
+            Color:
+                rgba: [root.live_volume_left/50,1,0,0.2+root.live_volume_left/200] if root.live_volume_left<=50 else [1,int(100-root.live_volume_left)/50,0,0.2+root.live_volume_left/200]
+            Rectangle:
+                pos: [self.size[0]/2-self.size[0]/2*root.live_volume_left/100,self.pos[1]]
+                size:[self.size[0]/2*root.live_volume_left/100,self.size[1]]
+        ToggleButton:
+            background_color:(52/256,145/256,179/256,1) if self.state=='normal' else (256/256,35/256,22/256,1)
+            text:root.l_live_start_button_normal if self.state=='normal' else root.l_live_start_button_pressed
+            on_state: root.recognition_button_pressed(self.state)
+            font_size:'20sp'
+            id:toggleRecLive
+
+    BoxLayout:
+        size_hint:1,0.70
+        padding: 10,00,10,0
+        spacing: 10
+        orientation:"vertical"
+        TextInput:
+            cursor_blink:True
+            allow_copy:True
+            hint_text: root.l_live_text_hint
+            id:full_text
+            text:""
+            disabled: not toggleRecLive.state=='normal'
+        BoxLayout:
+            size_hint:1,0.15
+            orientation:"horizontal"
+            padding: 10,40,10,10
+            spacing: 10
+            Label:
+                id:alttext
+                text:root.l_live_alternatives
+                opacity:0
+
+        ScrollView:
+            do_scroll_x: True
+            do_scroll_y: False
+            size_hint:1,0.35
+            id:gridAlt
+            opacity:1
+            GridLayout:
+                cols:100
+                size_hint_x:None
+                width:self.minimum_width
+                size_hint_y:None
+                Button:
+                    opacity:0
+                    disabled: True
+                    bold: True
+                    id:alt0
+                    size_hint:None,None
+                    width:self.texture_size[0]+50
+                    height:self.texture_size[1]+40
+                    text:"alt0"
+                    on_press:root.altenative_button_pressed(self.text)
+                Button:
+                    opacity:0
+                    disabled: True
+                    id:alt1
+                    size_hint:None,None
+                    width:self.texture_size[0]+50
+                    height:self.texture_size[1]+40
+                    text:"alt1"
+                    on_press:root.altenative_button_pressed(self.text)
+                Button:
+                    opacity:0
+                    disabled: True
+                    id:alt2
+                    size_hint:None,None
+                    width:self.texture_size[0]+50
+                    height:self.texture_size[1]+40
+                    text:"alt2"
+                    on_press:root.altenative_button_pressed(self.text)
+                Button:
+                    opacity:0
+                    disabled: True
+                    id:alt3
+                    size_hint:None,None
+                    width:self.texture_size[0]+50
+                    height:self.texture_size[1]+40
+                    text:"alt3"
+                    on_press:root.altenative_button_pressed(self.text)
+                Button:
+                    opacity:0
+                    disabled: True
+                    id:alt4
+                    size_hint:None,None
+                    width:self.texture_size[0]+50
+                    height:self.texture_size[1]+40
+                    text:"alt4"
+                    on_press:root.altenative_button_pressed(self.text)
+                Button:
+                    opacity:0
+                    disabled: True
+                    id:alt5
+                    size_hint:None,None
+                    width:self.texture_size[0]+50
+                    height:self.texture_size[1]+40
+                    text:"alt5"
+                    on_press:root.altenative_button_pressed(self.text)
+
+#--------------------------------- End of Live Voice Recognition screen
+
+#--------------------------------- File Voice Recognition screen
+<FileVoiceRecognition@BoxLayout>:
+    orientation:"vertical"
+    BoxLayout:
+        padding: 10,10,10,10
+        spacing: 10
+        size_hint:1,0.15
+        Label:
+            text:root.l_main_title
+            font_size:'30sp'
+    BoxLayout:
+        size_hint:1,0.15
+        orientation:"vertical"
+        padding: 10,10,10,10
+        spacing: 10
+        BoxLayout:
+            orientation:"horizontal"
+            Label:
+                text:root.l_side_title
+                font_size:'20sp'
+
+            ToggleButton:
+                disabled:not root.l_enable_start
+                background_color:(52/256,145/256,179/256,1) if self.state=='normal' else (256/256,35/256,22/256,1)
+                text:root.l_main_button
+                on_state: root.start_transcription(self.state)
+                font_size:'20sp'
+
+    BoxLayout:
+        id:filetext
+        size_hint:1,0.7
+        padding: 10,00,10,0
+        spacing: 10
+        orientation:"vertical"
+
+        FileChooserListView:
+            pos:self.pos
+            size_hint:1,1
+            id:filechooser
+            on_selection:root.file_is_selected(self.selection)
+            orientation:"vertical"
+            path:root.script_path
+        TextInput:
+            pos:self.pos
+            size_hint:1,0.01
+            opacity:0
+            cursor_blink:True
+            allow_copy:True
+            hint_text: root.l_def_text_input
+            id:full_text2
+            text:""
+        Label:
+            size_hint:1,0.01
+            text:""
+
+#--------------------------------- End of File Voice Recognition screen
+
+#--------------------------------- Settings screen
+<SettingsScreen@BoxLayout>:
+    on_parent:root.load_options()
+
+
+    orientation:"vertical"
+    padding: 10,10,10,10
+    spacing: 10
+    BoxLayout:
+        size_hint:1,0.1
+        Label:
+            text:root.l_settings_main_title
+            font_size:'30sp'
+
+    BoxLayout:
+        padding: 0,20,0,20
+        spacing: 10
+        orientation:"vertical"
+        size_hint:1,0.2
+        Label:
+            width:self.texture_size[0]+50
+            height:self.texture_size[1]+40
+            text:root.l_settings_app_language
+            font_size:'25sp'
+        ScrollView:
+            do_scroll_x: True
+            do_scroll_y: False
+            BoxLayout:
+                id:settbox2
+                size_hint_x:None
+                size_hint_y:None
+                width:self.minimum_width
+                height:self.minimum_height
+
+    BoxLayout:
+        padding: 0,20,0,20
+        spacing: 10
+        orientation:"vertical"
+        size_hint:1,0.2
+        Label:
+            width:self.texture_size[0]+50
+            height:self.texture_size[1]+40
+            text:root.l_settings_transcription_lang
+            font_size:'25sp'
+
+        ScrollView:
+            do_scroll_x: True
+            do_scroll_y: False
+            BoxLayout:
+                id:settbox3
+                size_hint_x:None
+                size_hint_y:None
+                width:self.minimum_width
+                height:self.minimum_height
+    BoxLayout:
+        padding: 20,20,20,20
+        spacing: 10
+        orientation:"vertical"
+        size_hint:1,0.05
+#--------------------------------- End of Settings screen
+
+#================================= MOTHER SCREEN
+<MotherScreen@TabbedPanel>:
+    id:motherScreen
+    do_default_tab:False
+
+    TabbedPanelItem:
+        text: root.l_app_tabbed_tab_name1
+        LiveVoiceRecognition:
+            id:liveVoiceRecognition
+    TabbedPanelItem:
+        text: root.l_app_tabbed_tab_name2
+        FileVoiceRecognition:
+            id:fileVoiceRecognition
+    TabbedPanelItem:
+        text: root.l_app_tabbed_tab_name3
+        SettingsScreen:
+            id:settingsScreen
+#================================= END OF MOTHER SCREEN
+
+#Show MotherScreen (main screen)
+MotherScreen:
